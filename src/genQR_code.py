@@ -1,11 +1,13 @@
-# https://github.com/reegan-anne/python_qrcode/tree/main
-# https://github.com/reegan-anne/python_qrcode/blob/main/main.ipynb
+''' genQR_code'''
+
+__author__ = 'Andreas Gising'
+__copyright__ = 'Free to use, please credit'
+__status__ = 'development'
 
 
-import sys,os
+import os
 import json
 import qrcode
-import time
 from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers import RoundedModuleDrawer, CircleModuleDrawer
 from datetime import datetime
@@ -88,3 +90,6 @@ config_backup_path = project_dir_path + '/' + time_str + '.json'
 # Save the config settings for the generated code(s)
 with open(config_backup_path,'w', encoding="utf-8") as outfile:
     outfile.write(json.dumps(config, indent=2))
+
+# For more inspiraion on QR-code modifications, please see
+# https://github.com/reegan-anne/python_qrcode/blob/main/main.ipynb
