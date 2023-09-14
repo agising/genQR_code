@@ -5,13 +5,13 @@
 import sys,os
 import json
 import qrcode
+import time
 from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers import RoundedModuleDrawer, CircleModuleDrawer
+from datetime import datetime
 
 # Find path to config file and logotype in different versions of python executable
 config_name = 'config.json'
-logo_jpg_name = 'logga.jpg'
-logo_png_name = 'logga.png'
 
 if getattr(sys, 'frozen', False):
     application_path = os.path.dirname(sys.executable)
@@ -30,9 +30,8 @@ config_path = os.path.join(application_path, config_name)
 print('Running mode:', running_mode)
 print('  Appliction path  :', application_path)
 print('  Config full path :', config_path)
-# print('  Logo.jpg full path :', logo_jpg_path)
-# print('  Logo.png full path :', logo_png_path)
 
+# Try to open the config
 try:
   with open(config_path, 'r', encoding="utf-8") as json_file:
     config = json.load(json_file)
@@ -40,14 +39,22 @@ try:
     logo = config['logo']
     project = config['project']
 except:
-  print('Faulty or no config file. Read the README.txt')
+  json_example = {"url": "klockren.nu", "logo": "logga.png", "project": "project_name"}
+  print(f'Faulty or no config file. Create a config.json that looks like this: \n{json.dumps(json_example, ident = 2)}')
   sys.exit()
 
-#
+# Full path to logo
 logo_path = os.path.join(application_path, logo)
+
 # Build path for out files
-out_no_logo_path = os.path.join(application_path, project + '_no_logo.png')
-out_logo_path = os.path.join(application_path, project + '_logo.png')
+project_dir_path = os.path.join(application_path, project)
+if not os.path.exists(project_dir_path):
+   # Create directory
+   os.makedirs(project_dir_path)
+else:
+   print('If you are re-generating a QR-code, windows might have difficulties overwriting the existing QR-code. If so, first delete the existing QR-codes.')
+out_no_logo_path = os.path.join(project_dir_path, project + '_no_logo.png')
+out_logo_path = os.path.join(project_dir_path, project + '_logo.png')
 
 # Create the QR object
 qr = qrcode.QRCode(version=4,
@@ -71,13 +78,13 @@ if os.path.isfile(logo_path):
                           embeded_image_path=logo_path
                           )
   qr_img.save(out_logo_path)
-# # Else look for png
-# elif os.path.isfile(logo_png_path):
-#   qr_img = qr.make_image(image_factory=StyledPilImage,
-#                             module_drawer=CircleModuleDrawer(),
-#                             eye_drawer=RoundedModuleDrawer(radius_ratio=1),
-#                             embeded_image_path=logo_jpg_path
-#                             )
-#   qr_img.save(out_logo_path)
 else:
   print(f'Could not find logotype {logo}')
+
+# Back up the config file, build up file name
+time_str = datetime.now().strftime('%Y%m%d-%H%M%S')
+
+config_backup_path = project_dir_path + '/' + time_str + '.json'
+# Save the config settings for the generated code(s)
+with open(config_backup_path,'w', encoding="utf-8") as outfile:
+    outfile.write(json.dumps(config, indent=2))
