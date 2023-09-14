@@ -10,6 +10,7 @@ If you choose a precompiled binary, put it next to config.json and logo.png, the
   "logo": "logo.png",
   "project": "lampa"
 }
+```
 
 ## Install
 Install requirements
