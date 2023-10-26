@@ -8,6 +8,7 @@ __status__ = 'development'
 import os
 import json
 import qrcode
+import sys
 from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers import RoundedModuleDrawer, CircleModuleDrawer
 from datetime import datetime
