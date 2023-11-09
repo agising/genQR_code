@@ -9,24 +9,12 @@ import os
 import json
 import qrcode
 import sys
-import argparse
 from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers import RoundedModuleDrawer, CircleModuleDrawer
 from datetime import datetime
 
-
-# parse command-line arguments
-parser = argparse.ArgumentParser(description='genQRCode', allow_abbrev=False, add_help=False)
-parser.add_argument('-h', '--help', action='help', help=argparse.SUPPRESS)
-parser.add_argument('--invoice', action='store_true', help='Creates invoice QR', required=False)
-# Set defaults
-parser.set_defaults(feature=True)
-# Parse
-args = parser.parse_args()
-
 # Find path to config file and logotype in different versions of python executable
 config_name = 'config.json'
-invoice_config_name = 'invoice.json'
 
 if getattr(sys, 'frozen', False):
     application_path = os.path.dirname(sys.executable)
@@ -41,7 +29,6 @@ else:
         running_mode = 'Interactive'
 
 config_path = os.path.join(application_path, config_name)
-invoice_config_path = os.path.join(application_path, invoice_config_name)
 
 print('Running mode:', running_mode)
 print('  Appliction path  :', application_path)
@@ -50,43 +37,35 @@ print('  Config full path :', config_path)
 # Try to open the config
 try:
   with open(config_path, 'r', encoding="utf-8") as json_file:
-    config = json.load(json_file)
-    url = config['url']
-    logo = config['logo']
-    project = config['project']
+    invoice = json.load(json_file)
+    logo = invoice['logo']
+    # Use inoice reference number as project number
+    project = invoice['invoice_ref']
+  
+    invoice_data = {}
+    # Chaning parameters
+    invoice_data['iref']= invoice['invoice_ref']
+    invoice_data['idt']= invoice['invoice_date']
+    invoice_data['ddt']= invoice['due_date']
+    invoice_data['due']= invoice['amount_due']
+    #Likely static paramters
+    invoice_data['uqr']= invoice['uqr']
+    invoice_data['tp']= invoice['tp']
+    invoice_data['nme']= invoice['company_name']
+    invoice_data['cid']= invoice['org_nr']
+    invoice_data['cc']= invoice['country_code']
+    invoice_data['cur']= invoice['currency']
+    invoice_data['pt']= invoice['payment_type']
+    invoice_data['acc']= invoice['account']
+
+    # Create a string to encode in the QR
+    coded_string = json.dumps(invoice_data)
+
 except:
-  json_example = {"url": "klockren.nu", "logo": "logga.png", "project": "project_name"}
-  print(f'Faulty or no config file. Create a config.json that looks like this: \n{json.dumps(json_example, ident = 2)}')
+  # Error in config.json. Show how a correct config.json looks like.
+  json_example = {"iref": "Donation-0001", "idt": "20231025", "ddt": "20231112", "due": 150.0, "uqr": 1, "tp": 1, "nme": "UASolutions AB", "cid": "212000-1363", "cc": "SE", "cur": "SEK", "pt": "BG", "acc": "265-5389"}
+  print(f'Faulty or no config file. Create a config.json that looks like this: {json.dumps(json_example, indent = 2)}')
   sys.exit()
-
-if args.invoice:
-   # Replace url
-  url = {}
-  # Try to open the invoice
-  try:
-    with open(invoice_config_path, 'r', encoding="utf-8") as json_file:
-      invoice = json.load(json_file)
-      invoice_data = {}
-      invoice_data['uqr']= invoice['uqr']
-      invoice_data['tp']= invoice['tp']
-      invoice_data['nme']= invoice['company_name']
-      invoice_data['cc']= invoice['country_code']
-      invoice_data['cid']= invoice['org_nr']
-      invoice_data['iref']= invoice['invoice_ref']
-      invoice_data['idt']= invoice['invoice_date']
-      invoice_data['ddt']= invoice['due_date']
-      invoice_data['due']= invoice['due']
-      invoice_data['cur']= invoice['currency']
-      invoice_data['pt']= invoice['payment_type']
-      invoice_data['acc']= invoice['account']
-
-      url = json.dumps(invoice_data)
-      print('invoice data loaded')
-  except:
-    # TODO
-    json_example = {"url": "klockren.nu", "logo": "logga.png", "project": "project_name"}
-    print(f'Faulty or no config file. Create a config.json that looks like this: \n{json.dumps(json_example, ident = 2)}')
-    sys.exit()
 
 # Full path to logo
 logo_path = os.path.join(application_path, logo)
@@ -106,7 +85,7 @@ qr = qrcode.QRCode(version=4,
                    error_correction=qrcode.constants.ERROR_CORRECT_H)
 
 # Add the link to the qr object
-qr.add_data(url)
+qr.add_data(coded_string)
 
 # Generate the QR withou logo
 qr_img = qr.make_image(image_factory=StyledPilImage,
@@ -132,7 +111,7 @@ time_str = datetime.now().strftime('%Y%m%d-%H%M%S')
 config_backup_path = project_dir_path + '/' + time_str + '.json'
 # Save the config settings for the generated code(s)
 with open(config_backup_path,'w', encoding="utf-8") as outfile:
-    outfile.write(json.dumps(config, indent=2))
+    outfile.write(json.dumps(invoice, indent=2))
 
 # For more inspiraion on QR-code modifications, please see
 # https://github.com/reegan-anne/python_qrcode/blob/main/main.ipynb
