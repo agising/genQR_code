@@ -43,7 +43,7 @@ try:
     project = config['project']
 except:
   json_example = {"url": "klockren.nu", "logo": "logga.png", "project": "project_name"}
-  print(f'Faulty or no config file. Create a config.json that looks like this: \n{json.dumps(json_example, ident = 2)}')
+  print(f'Faulty or no config file. Create a config.json that looks like this: \n{json.dumps(json_example, indent = 2)}')
   sys.exit()
 
 # Full path to logo
