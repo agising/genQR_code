@@ -52,21 +52,21 @@ To excute the script
 To compile a stand alone binary
 >  cd src/urlQR
 
->  pyinstaller --onefile --distpath ../executable --workpath ../tmp urlQR.py
+>  pyinstaller --onefile --distpath ../urlExecutable --workpath ../tmp urlQR.py
 
->  cp config.json ../executable
+>  cp config.json ../urlExecutable
 
->  cp logo.png ../executable
+>  cp logo.png ../urlExecutable
 
 ## Compile invoiceQR stand alone
 To compile a stand alone binary
 >  cd src/invoiceQR
 
->  pyinstaller --onefile --distpath ../executable --workpath ../tmp invoiceQR.py
+>  pyinstaller --onefile --distpath ../invoiceExecutable --workpath ../tmp invoiceQR.py
 
->  cp config.json ../executable
+>  cp config.json ../invoiceExecutable
 
->  cp logo.png ../executable
+>  cp logo.png ../invoiceExecutable
 
 ##
 Invoice example
