@@ -1,0 +1,15 @@
+
+{
+    "uqr": 1,
+    "tp": 1,
+    "company_name": "UASolutions AB",
+    "country_code": "SE",
+    "org_nr": "212000-1363",
+    "invoice_ref": "23001",
+    "invoice_date": "20231102",
+    "due_date": "20231112",
+    "due": 62500.0,
+    "currency": "SEK",
+    "payment_type": "BG",
+    "account": "265-5389"
+}
