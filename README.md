@@ -76,6 +76,5 @@ url example
 
 ![Example_logo](https://github.com/agising/genQR_code/assets/49570216/71ebe745-78a3-4338-8c4a-3929900ea7b6)
 
-##
-Creds
-Thanks to kribe48 for compiling windows-releases!
+## Creds
+Thanks to kribe48 for compiling the windows-releases!
