@@ -10,18 +10,18 @@ If you choose a precompiled binary, put it next to config.json and logo.png, the
 ### Config.json content for url
 ```yaml
 {
-  "url": "www.klockren.nu",
+  "url": "www.uasolutions.se",
   "logo": "logo.png",
-  "project": "lampa"
+  "project": "Example"
 }
 ```
 
 ### Config.json content for invoice
 ```yaml
 {
-    "invoice_ref": "Donation-0001",
-    "invoice_date": "20231025",
-    "due_date": "20231112",
+    "invoice_ref": "Example_ref",
+    "invoice_date": "20231130",
+    "due_date": "20241130",
     "amount_due": 150.0,
     "uqr": 1,
     "tp": 1,
@@ -31,7 +31,7 @@ If you choose a precompiled binary, put it next to config.json and logo.png, the
     "currency": "SEK",
     "payment_type": "BG",
     "account": "265-5389",
-    "logo": "black_icon_white_background_square.png"
+    "logo": "logo.png" 
 }
 ```
 
