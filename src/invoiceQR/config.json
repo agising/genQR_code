@@ -1,0 +1,15 @@
+{
+    "invoice_ref": "Example_ref",
+    "invoice_date": "20231130",
+    "due_date": "20241130",
+    "amount_due": 150.0,
+    "uqr": 1,
+    "tp": 1,
+    "company_name": "UASolutions AB",
+    "org_nr": "212000-1363",
+    "country_code": "SE",
+    "currency": "SEK",
+    "payment_type": "BG",
+    "account": "265-5389",
+    "logo": "logo.png" 
+}
